@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = InchCI::Worker::VERSION
   spec.authors       = ["René Föhring"]
   spec.email         = ["rf@bamaru.de"]
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
+  spec.summary       = %q{Worker for the Inch CI project}
+  spec.description   = %q{}
   spec.homepage      = ""
   spec.license       = "MIT"
 
