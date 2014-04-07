@@ -39,7 +39,28 @@ module InchCI
             'score' => o.score.to_i,
             'grade' => o.grade.to_s,
             'priority' => o.priority.to_i,
+            'location' => location(o.files.first),
+            'roles' => o.roles.map { |r| role_to_hash(o, r) },
           }
+        end
+
+        def location(file)
+          "#{file.relative_path}:#{file.line_no}"
+        end
+
+        def role_to_hash(object, role)
+          ref_name = role.object.fullname
+          name = role.class.to_s.gsub('Inch::Evaluation::Role::', '')
+          hash = {
+            'name' => name,
+            'priority' => role.priority,
+          }
+          hash['potential_score'] = role.potential_score if role.potential_score
+          hash['score'] = role.score if role.score
+          hash['min_score'] = role.min_score if role.min_score
+          hash['max_score'] = role.max_score if role.max_score
+          hash['ref_name'] = ref_name if object.fullname != ref_name
+          hash
         end
       end
     end
