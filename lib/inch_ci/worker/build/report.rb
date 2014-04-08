@@ -45,6 +45,7 @@ module InchCI
         end
 
         def location(file)
+          return unless file
           "#{file.relative_path}:#{file.line_no}"
         end
 
