@@ -15,7 +15,7 @@ describe ::InchCI::Worker::Build do
     assert err.empty?
   end
 
-  it "should retrieve the repo" do
+  it "should not retrieve non-existing repo" do
     out, err = capture_io do
       @task = described_class.new(incorrect_url, branch_name)
     end
