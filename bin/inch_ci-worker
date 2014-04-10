@@ -14,7 +14,12 @@ $LOAD_PATH.unshift(find_lib_path)
 require 'bundler/setup'
 require 'inch_ci/worker'
 
+LATEST_OPTION = '--latest'
+
 url = ARGV[0]
 branch_name = ARGV[1]
+revision = ARGV[2] || LATEST_OPTION
 
-InchCI::Worker::Build::Task.new(url, branch_name)
+revision = 'HEAD' if revision == LATEST_OPTION
+
+InchCI::Worker::Build::Task.new(url, branch_name, revision)

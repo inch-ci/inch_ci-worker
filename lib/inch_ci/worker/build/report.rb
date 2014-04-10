@@ -17,11 +17,13 @@ module InchCI
               'branch_name' => build.branch_name,
               'started_at' => build.started_at,
               'finished_at' => build.started_at,
+              'latest_revision' => build.latest_revision,
             }
           data['service_name'] = build.service_name.to_s if build.service_name
           data['user_name'] = build.user_name if build.user_name
           data['repo_name'] = build.repo_name if build.repo_name
           data['revision'] = build.revision_uid if build.revision_uid
+          data['tag'] = build.tag_uid if build.tag_uid
           data['objects'] = objects_hash if build.objects
           {'build' => data}
         end

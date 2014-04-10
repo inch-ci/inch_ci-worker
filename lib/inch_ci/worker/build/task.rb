@@ -8,9 +8,13 @@ module InchCI
   module Worker
     module Build
       class Task
-        def initialize(url, branch_name = "master")
+        def initialize(url, branch_name = 'master', revision = nil)
+          if revision.nil?
+            revision = 'HEAD'
+            @latest_revision = true
+          end
           started_at = Time.now
-          @result = build(url, branch_name)
+          @result = build(url, branch_name, revision, !!@latest_revision)
           @result.finished_at = Time.now
           @result.started_at = started_at
           puts Report.new(@result).to_yaml
@@ -18,17 +22,24 @@ module InchCI
 
         private
 
-        def build(url, branch_name)
+        def build(url, branch_name, revision, latest_revision)
           @url = url
           if retrieve_repo
-            repo.change_branch(branch_name)
-            if @codebase = parse_codebase(repo.path)
-              ResultSuccess.new(repo, branch_name, @codebase.objects)
+            if repo.change_branch(branch_name, true)
+              if repo.checkout_revision(revision)
+                if @codebase = parse_codebase(repo.path)
+                  ResultSuccess.new(repo, branch_name, latest_revision, @codebase.objects)
+                else
+                  ResultParserFailed.new(repo, branch_name, latest_revision, nil)
+                end
+              else
+                ResultCheckoutRevisionFailed.new(repo, branch_name, latest_revision, nil)
+              end
             else
-              ResultParserFailed.new(repo, branch_name, nil)
+              ResultChangeBranchFailed.new(repo, branch_name, latest_revision, nil)
             end
           else
-            ResultRetrieverFailed.new(repo, branch_name, nil)
+            ResultRetrieverFailed.new(repo, branch_name, latest_revision, nil)
           end
         end
 

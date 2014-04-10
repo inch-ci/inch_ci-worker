@@ -1,7 +1,7 @@
 module InchCI
   module Worker
     module Build
-      class Result < Struct.new(:repo, :branch_name, :objects)
+      class Result < Struct.new(:repo, :branch_name, :latest_revision, :objects)
         extend Forwardable
 
         def_delegators :repo, :url
@@ -22,6 +22,10 @@ module InchCI
         def status
           @status || 'error'
         end
+
+        def tag_uid
+          repo.tag.empty? ? nil : repo.tag
+        end
       end
 
       class ResultSuccess < Result
@@ -32,6 +36,7 @@ module InchCI
 
       class ResultFail < Result
         def revision_uid; nil; end
+        def tag_uid; nil; end
         def service_name; nil; end
         def user_name; nil; end
         def repo_name; nil; end
@@ -43,6 +48,18 @@ module InchCI
       class ResultRetrieverFailed < ResultFail
         def status
           'retriever_failed'
+        end
+      end
+
+      class ResultChangeBranchFailed < ResultFail
+        def status
+          'change_branch_failed'
+        end
+      end
+
+      class ResultCheckoutRevisionFailed < ResultFail
+        def status
+          'checkout_revision_failed'
         end
       end
 

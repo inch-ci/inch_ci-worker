@@ -21,9 +21,41 @@ describe ::InchCI::Worker::Build do
     assert err.empty?
   end
 
+  it "should not retrieve non-existing branch in repo" do
+    out, err = capture_io do
+      @task = described_class.new(url, 'somebranch')
+    end
+    refute out.empty?
+    assert_match /status: change_branch_failed/, out
+  end
+
+  it "should not retrieve non-existing revision in repo" do
+    out, err = capture_io do
+      @task = described_class.new(url, branch_name, 'vX.X.X')
+    end
+    refute out.empty?
+    assert_match /status: checkout_revision_failed/, out
+  end
+
   it "should not retrieve non-existing repo" do
     out, err = capture_io do
       @task = described_class.new(incorrect_url, branch_name)
+    end
+    refute out.empty?
+    assert_match /status: retriever_failed/, out
+  end
+
+  it "should not retrieve non-existing branch non-existing in repo" do
+    out, err = capture_io do
+      @task = described_class.new(incorrect_url, 'somebranch')
+    end
+    refute out.empty?
+    assert_match /status: retriever_failed/, out
+  end
+
+  it "should not retrieve non-existing revision non-existing in repo" do
+    out, err = capture_io do
+      @task = described_class.new(incorrect_url, branch_name, 'vX.X.X')
     end
     refute out.empty?
     assert_match /status: retriever_failed/, out
