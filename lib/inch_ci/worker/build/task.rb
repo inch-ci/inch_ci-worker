@@ -22,16 +22,23 @@ module InchCI
           @url = url
           if retrieve_repo
             repo.change_branch(branch_name)
-            @codebase = parse_codebase(repo.path)
-            ResultSuccess.new(repo, branch_name, @codebase.objects)
+            if @codebase = parse_codebase(repo.path)
+              ResultSuccess.new(repo, branch_name, @codebase.objects)
+            else
+              ResultParserFailed.new(repo, branch_name, nil)
+            end
           else
-            ResultRetrieveFail.new(repo, branch_name, nil)
+            ResultRetrieverFailed.new(repo, branch_name, nil)
           end
         end
 
         def parse_codebase(path)
           YARD::Config.options[:safe_mode] = true
-          ::Inch::Codebase.parse(path)
+          begin
+            ::Inch::Codebase.parse(path)
+          rescue
+            nil
+          end
         end
 
         def repo

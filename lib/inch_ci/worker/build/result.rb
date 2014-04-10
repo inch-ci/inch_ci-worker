@@ -36,13 +36,19 @@ module InchCI
         def user_name; nil; end
         def repo_name; nil; end
         def status
-          'fail'
+          'failed'
         end
       end
 
-      class ResultRetrieveFail < ResultFail
+      class ResultRetrieverFailed < ResultFail
         def status
-          'fail_retrieve'
+          'retriever_failed'
+        end
+      end
+
+      class ResultParserFailed < ResultFail
+        def status
+          'parser_failed'
         end
       end
     end
