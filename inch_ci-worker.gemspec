@@ -23,5 +23,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "simplecov"
   spec.add_development_dependency "pry"
 
-  #spec.add_dependency "inch"
+  spec.add_dependency "inch", ">= 0.4.2"
 end
