@@ -34,8 +34,9 @@ module InchCI
 
         def code_object_to_hash(o)
           {
-            'type' => o.type,
+            'type' => o.type.gsub('Inch::CodeObject::Proxy::', ''),
             'fullname' => o.fullname,
+            'docstring' => o.original_docstring.to_s,
             'score' => o.score.to_i,
             'grade' => o.grade.to_s,
             'priority' => o.priority.to_i,
