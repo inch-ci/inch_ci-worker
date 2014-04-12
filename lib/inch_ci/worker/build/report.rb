@@ -22,7 +22,12 @@ module InchCI
           data['service_name'] = build.service_name.to_s if build.service_name
           data['user_name'] = build.user_name if build.user_name
           data['repo_name'] = build.repo_name if build.repo_name
-          data['revision'] = build.revision_uid if build.revision_uid
+          if build.revision_uid
+            data['revision_uid'] = build.revision_uid
+            data['revision_author_name'] = build.revision_author_name
+            data['revision_author_email'] = build.revision_author_email
+            data['revision_author_date'] = build.revision_author_date
+          end
           data['tag'] = build.tag_uid if build.tag_uid
           data['objects'] = objects_hash if build.objects
           {'build' => data}

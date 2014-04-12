@@ -6,6 +6,9 @@ module InchCI
 
         def_delegators :repo, :url
         def_delegators :repo, :service_name, :user_name, :repo_name
+        def_delegators :repo, :revision_author_name
+        def_delegators :repo, :revision_author_email
+        def_delegators :repo, :revision_author_date
 
         attr_accessor :started_at
         attr_accessor :finished_at
@@ -36,6 +39,9 @@ module InchCI
 
       class ResultFail < Result
         def revision_uid; nil; end
+        def revision_author_name; nil; end
+        def revision_author_email; nil; end
+        def revision_author_date; nil; end
         def tag_uid; nil; end
         def service_name; nil; end
         def user_name; nil; end
