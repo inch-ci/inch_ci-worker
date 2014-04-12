@@ -1,6 +1,3 @@
-require 'inch_ci/worker/build'
-require 'inch_ci/worker/version'
-
 require 'repomen'
 
 # Set the directory where checked out repos are kept
@@ -13,3 +10,6 @@ module InchCI
   module Worker
   end
 end
+
+require 'inch_ci/worker/build'
+require 'inch_ci/worker/list_tags'

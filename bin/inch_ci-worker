@@ -21,8 +21,15 @@ class Command
     end
   end
 
+  class ListTags
+    def initialize(url, branch_name)
+      InchCI::Worker::ListTags::Task.new(url, branch_name)
+    end
+  end
+
   MAP = {
     'build' => Build,
+    'list-tags' => ListTags
   }
 
   def self.run(command_name, args)
