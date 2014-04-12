@@ -14,8 +14,27 @@ $LOAD_PATH.unshift(find_lib_path)
 require 'bundler/setup'
 require 'inch_ci/worker'
 
-url = ARGV[0]
-branch_name = ARGV[1]
-revision = ARGV[2]
+class Command
+  class Build
+    def initialize(url, branch_name = nil, revision = nil)
+      InchCI::Worker::Build::Task.new(url, branch_name, revision)
+    end
+  end
 
-InchCI::Worker::Build::Task.new(url, branch_name, revision)
+  MAP = {
+    'build' => Build,
+  }
+
+  def self.run(command_name, args)
+    if command_class = MAP[command_name]
+      command_class.new(*args)
+    else
+      puts "Unrecognized command: #{command_name}".color(:red)
+      puts "Valid commands: #{MAP.keys.sort.join(', ')}"
+      exit 1
+    end
+  end
+end
+
+command_name = ARGV.shift
+Command.run(command_name, ARGV)
