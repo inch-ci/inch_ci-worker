@@ -24,6 +24,7 @@ module InchCI
           data['repo_name'] = build.repo_name if build.repo_name
           if build.revision_uid
             data['revision_uid'] = build.revision_uid
+            data['revision_message'] = build.revision_message
             data['revision_author_name'] = build.revision_author_name
             data['revision_author_email'] = build.revision_author_email
             data['revision_authored_at'] = build.revision_authored_at

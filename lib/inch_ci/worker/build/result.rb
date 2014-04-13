@@ -6,6 +6,7 @@ module InchCI
 
         def_delegators :repo, :url
         def_delegators :repo, :service_name, :user_name, :repo_name
+        def_delegators :repo, :revision_message
         def_delegators :repo, :revision_author_name
         def_delegators :repo, :revision_author_email
         def_delegators :repo, :revision_authored_at
@@ -39,6 +40,7 @@ module InchCI
 
       class ResultFail < Result
         def revision_uid; nil; end
+        def revision_message; nil; end
         def revision_author_name; nil; end
         def revision_author_email; nil; end
         def revision_authored_at; nil; end
