@@ -26,7 +26,7 @@ module InchCI
             data['revision_uid'] = build.revision_uid
             data['revision_author_name'] = build.revision_author_name
             data['revision_author_email'] = build.revision_author_email
-            data['revision_author_date'] = build.revision_author_date
+            data['revision_authored_at'] = build.revision_authored_at
           end
           data['tag'] = build.tag_uid if build.tag_uid
           data['objects'] = objects_hash if build.objects
