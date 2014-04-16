@@ -55,25 +55,25 @@ module InchCI
 
       class ResultRetrieverFailed < ResultFail
         def status
-          'retriever_failed'
+          'failed:retriever'
         end
       end
 
       class ResultChangeBranchFailed < ResultFail
         def status
-          'change_branch_failed'
+          'failed:change_branch'
         end
       end
 
       class ResultCheckoutRevisionFailed < ResultFail
         def status
-          'checkout_revision_failed'
+          'failed:checkout_revision'
         end
       end
 
       class ResultParserFailed < ResultFail
         def status
-          'parser_failed'
+          'failed:parser'
         end
       end
     end
