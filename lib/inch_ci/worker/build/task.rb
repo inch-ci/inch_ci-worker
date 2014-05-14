@@ -9,6 +9,7 @@ module InchCI
     module Build
       class Task
         def initialize(url, branch_name = 'master', revision = nil)
+          @work_dir = Dir.mktmpdir
           if revision.nil?
             revision = 'HEAD'
             @latest_revision = true
@@ -18,6 +19,8 @@ module InchCI
           @result.finished_at = Time.now
           @result.started_at = started_at
           puts Report.new(@result).to_yaml
+        ensure
+          FileUtils.remove_entry @work_dir
         end
 
         private
@@ -53,7 +56,7 @@ module InchCI
         end
 
         def repo
-          @repo ||= Repomen.retrieve(@url)
+          @repo ||= Repomen::Retriever.new(@url, :work_dir => @work_dir)
         end
 
         # @return [Repomen::Retriever,nil] either the retrieved repo or +nil+
