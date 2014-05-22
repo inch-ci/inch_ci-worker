@@ -1,0 +1,47 @@
+#!/usr/bin/env ruby
+
+# @return [String] the path to the 'lib' directory of Inch
+def find_lib_path
+  path = __FILE__
+  while File.symlink?(path)
+    path = File.expand_path(File.readlink(path), File.dirname(path))
+  end
+  File.join(File.dirname(File.expand_path(path)), '..', 'lib')
+end
+
+$LOAD_PATH.unshift(find_lib_path)
+
+require 'bundler/setup'
+require 'inch_ci/worker'
+
+class Command
+  class Build
+    def initialize(url, branch_name = nil, revision = nil)
+      InchCI::Worker::Build::Task.new(url, branch_name, revision)
+    end
+  end
+
+  class ListTags
+    def initialize(url, branch_name)
+      InchCI::Worker::ListTags::Task.new(url, branch_name)
+    end
+  end
+
+  MAP = {
+    'build' => Build,
+    'list-tags' => ListTags
+  }
+
+  def self.run(command_name, args)
+    if command_class = MAP[command_name]
+      command_class.new(*args)
+    else
+      puts "Unrecognized command: #{command_name}".color(:red)
+      puts "Valid commands: #{MAP.keys.sort.join(', ')}"
+      exit 1
+    end
+  end
+end
+
+command_name = ARGV.shift
+Command.run(command_name, ARGV)
