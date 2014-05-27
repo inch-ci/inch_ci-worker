@@ -24,5 +24,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "pry"
 
   spec.add_dependency "inch", ">= 0.4.2"
-  spec.add_dependency "repomen", ">= 0.1.7"
+  spec.add_dependency "repomen", ">= 0.1.8"
 end
