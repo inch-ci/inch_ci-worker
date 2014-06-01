@@ -27,7 +27,6 @@ class Command
     end
   end
 
-
   class Version
     def initialize(*args)
       puts InchCI::Worker::VERSION
