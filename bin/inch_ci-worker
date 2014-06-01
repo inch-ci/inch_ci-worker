@@ -27,9 +27,17 @@ class Command
     end
   end
 
+
+  class Version
+    def initialize(*args)
+      puts InchCI::Worker::VERSION
+    end
+  end
+
   MAP = {
     'build' => Build,
-    'list-tags' => ListTags
+    'list-tags' => ListTags,
+    '-v' => Version,
   }
 
   def self.run(command_name, args)
