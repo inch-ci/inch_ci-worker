@@ -50,8 +50,8 @@ module InchCI
           YARD::Config.options[:safe_mode] = true
           begin
             ::Inch::Codebase.parse(path)
-          rescue e
-            puts e
+          rescue Exception => e
+            warn e
             nil
           end
         end
