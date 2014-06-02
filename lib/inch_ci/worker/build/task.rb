@@ -20,7 +20,7 @@ module InchCI
           @result.started_at = started_at
           puts Report.new(@result).to_yaml
         ensure
-          FileUtils.remove_entry @work_dir
+          FileUtils.remove_entry(@work_dir) unless @work_dir.nil?
         end
 
         private
