@@ -1,3 +1,4 @@
+require 'tmpdir'
 require 'inch'
 require 'repomen'
 
