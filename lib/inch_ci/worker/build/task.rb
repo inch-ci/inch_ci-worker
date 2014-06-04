@@ -51,11 +51,11 @@ module InchCI
 
         # @param info [#service_name,#user_name,#repo_name]
         def badge_in_readme?(info)
-          filename = Dir[repo.path, '*.*'].detect do |f|
+          filename = Dir[File.join(repo.path, '*.*')].detect do |f|
               File.basename(f) =~ /\Areadme\./i
             end
           if filename
-            contents = File.read(File.join(repo.path, filename))
+            contents = File.read(filename)
             pattern = Regexp.escape("inch-ci.org/#{info.service_name}/#{info.user_name}/#{info.repo_name}")
             !!( contents =~ /#{pattern}/mi )
           else
