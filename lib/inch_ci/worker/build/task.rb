@@ -32,7 +32,9 @@ module InchCI
             if repo.change_branch(branch_name, true)
               if repo.checkout_revision(revision)
                 if @codebase = parse_codebase(repo.path)
-                  ResultSuccess.new(repo, branch_name, latest_revision, @codebase.objects)
+                  result = ResultSuccess.new(repo, branch_name, latest_revision, @codebase.objects)
+                  result.badge_in_readme = badge_in_readme?(result)
+                  result
                 else
                   ResultParserFailed.new(repo, branch_name, latest_revision, nil)
                 end
@@ -44,6 +46,20 @@ module InchCI
             end
           else
             ResultRetrieverFailed.new(repo, branch_name, latest_revision, nil)
+          end
+        end
+
+        # @param info [#service_name,#user_name,#repo_name]
+        def badge_in_readme?(info)
+          filename = Dir[repo.path, '*.*'].detect do |f|
+              File.basename(f) =~ /\Areadme\./i
+            end
+          if filename
+            contents = File.read(File.join(repo.path, filename))
+            pattern = Regexp.escape("inch-ci.org/#{info.service_name}/#{info.user_name}/#{info.repo_name}")
+            !!( contents =~ /#{pattern}/mi )
+          else
+            false
           end
         end
 

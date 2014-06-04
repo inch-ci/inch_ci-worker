@@ -22,6 +22,7 @@ module InchCI
           data['service_name'] = build.service_name.to_s if build.service_name
           data['user_name'] = build.user_name if build.user_name
           data['repo_name'] = build.repo_name if build.repo_name
+          data['badge_in_readme'] = build.badge_in_readme
           if build.revision_uid
             data['revision_uid'] = build.revision_uid
             data['revision_message'] = build.revision_message

@@ -12,6 +12,7 @@ module InchCI
         def_delegators :repo, :revision_authored_at
 
         attr_accessor :started_at
+        attr_accessor :badge_in_readme
         attr_accessor :finished_at
         attr_writer :status
 
