@@ -55,7 +55,7 @@ module InchCI
               File.basename(f) =~ /\Areadme\./i
             end
           if filename
-            contents = File.read(filename)
+            contents = File.read(filename, :encoding => 'utf-8')
             pattern = Regexp.escape("inch-ci.org/#{info.service_name}/#{info.user_name}/#{info.repo_name}")
             !!( contents =~ /#{pattern}/mi )
           else
