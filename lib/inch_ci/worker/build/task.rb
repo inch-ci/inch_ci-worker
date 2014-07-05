@@ -2,8 +2,9 @@ require 'tmpdir'
 require 'inch'
 require 'repomen'
 
-require_relative 'result'
-require_relative 'report'
+require 'inch_ci/worker/build/result'
+require 'inch_ci/worker/build/report'
+require 'inch_ci/worker/build/badge_detector'
 
 module InchCI
   module Worker
@@ -51,16 +52,7 @@ module InchCI
 
         # @param info [#service_name,#user_name,#repo_name]
         def badge_in_readme?(info)
-          filename = Dir[File.join(repo.path, '*.*')].detect do |f|
-              File.basename(f) =~ /\Areadme\./i
-            end
-          if filename
-            contents = File.read(filename, :encoding => 'utf-8')
-            pattern = Regexp.escape("inch-ci.org/#{info.service_name}/#{info.user_name}/#{info.repo_name}")
-            !!( contents =~ /#{pattern}/mi )
-          else
-            false
-          end
+          BadgeDetector.in_readme?(repo, info)
         end
 
         def parse_codebase(path)
