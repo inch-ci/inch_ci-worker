@@ -23,6 +23,7 @@ module InchCI
           data['user_name'] = build.user_name if build.user_name
           data['repo_name'] = build.repo_name if build.repo_name
           data['badge_in_readme'] = build.badge_in_readme
+          data['inch_version'] = ::Inch::VERSION
           if build.revision_uid
             data['revision_uid'] = build.revision_uid
             data['revision_message'] = build.revision_message

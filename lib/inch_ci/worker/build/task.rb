@@ -27,13 +27,20 @@ module InchCI
 
         private
 
+        # @param info [#service_name,#user_name,#repo_name]
+        def badge_in_readme?(info)
+          BadgeDetector.in_readme?(repo, info)
+        end
+
         def build(url, branch_name, revision, latest_revision)
           @url = url
           if retrieve_repo
             if repo.change_branch(branch_name, true)
               if repo.checkout_revision(revision)
                 if @codebase = parse_codebase(repo.path)
-                  ResultSuccess.new(repo, branch_name, latest_revision, @codebase.objects)
+                  result = ResultSuccess.new(repo, branch_name, latest_revision, @codebase.objects)
+                  result.badge_in_readme = badge_in_readme?(result)
+                  result
                 else
                   ResultParserFailed.new(repo, branch_name, latest_revision, nil)
                 end
