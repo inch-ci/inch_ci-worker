@@ -1,5 +1,6 @@
 require 'inch'
 require 'repomen'
+require 'tmpdir'
 
 require_relative 'result'
 require_relative 'report'
