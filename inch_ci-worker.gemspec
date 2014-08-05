@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["rf@bamaru.de"]
   spec.summary       = %q{Worker for the Inch CI project}
   spec.description   = %q{}
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/inch-ci/inch_ci-worker"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
@@ -23,6 +23,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "simplecov"
   spec.add_development_dependency "pry"
 
-  spec.add_dependency "inch", ">= 0.5.0.rc2"
+  spec.add_dependency "inch", ">= 0.5.0.rc3"
   spec.add_dependency "repomen", ">= 0.2.0.rc1"
 end

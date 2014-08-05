@@ -33,9 +33,7 @@ module InchCI
             if repo.change_branch(branch_name, true)
               if repo.checkout_revision(revision)
                 if @codebase = parse_codebase(repo.path)
-                  result = ResultSuccess.new(repo, branch_name, latest_revision, @codebase.objects)
-                  result.badge_in_readme = badge_in_readme?(result)
-                  result
+                  ResultSuccess.new(repo, branch_name, latest_revision, @codebase.objects)
                 else
                   ResultParserFailed.new(repo, branch_name, latest_revision, nil)
                 end
@@ -48,11 +46,6 @@ module InchCI
           else
             ResultRetrieverFailed.new(repo, branch_name, latest_revision, nil)
           end
-        end
-
-        # @param info [#service_name,#user_name,#repo_name]
-        def badge_in_readme?(info)
-          BadgeDetector.in_readme?(repo, info)
         end
 
         def parse_codebase(path)
