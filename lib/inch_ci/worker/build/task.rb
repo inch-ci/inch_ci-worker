@@ -58,9 +58,11 @@ module InchCI
         def parse_codebase(path)
           YARD::Config.options[:safe_mode] = true
           begin
-            ::Inch::Codebase.parse(path)
+            language = :ruby # TODO: make dynamic
+            config = ::Inch::Config.for(language, path)
+            ::Inch::Codebase.parse(path, config.codebase)
           rescue Exception => e
-            warn e
+            warn e.inspect
             nil
           end
         end
