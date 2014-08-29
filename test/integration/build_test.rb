@@ -3,8 +3,8 @@ require File.expand_path(File.dirname(__FILE__) + '/../test_helper')
 describe ::InchCI::Worker::Build do
   let(:described_class) { ::InchCI::Worker::Build::Task }
   let(:branch_name) { 'master' }
-  let(:url) { 'git@bitbucket.org:atlassian_tutorial/helloworld.git' }
-  let(:incorrect_url) { 'git@bitbucket.org:atlassian_tutorial/helloworld123.git' }
+  let(:url) { 'git@github.com:inch-ci/Hello-World.git' }
+  let(:incorrect_url) { 'git@github.com:inch-ci/Hello-World.git123.git' }
 
   #
   # Good scenarios
@@ -20,10 +20,17 @@ describe ::InchCI::Worker::Build do
   end
 
   it 'should retrieve the repo and checkout revision' do
-    skip # helloworld doesnot have tags
-    # TODO: make own helloworld repo
     out, err = capture_io do
       @task = described_class.new(url, branch_name, 'v0.1.0')
+    end
+    refute out.empty?
+    assert_match /status: success/, out
+    assert err.empty?
+  end
+
+  it 'should retrieve the repo and checkout develop branch' do
+    out, err = capture_io do
+      @task = described_class.new(url, branch_name, 'develop')
     end
     refute out.empty?
     assert_match /status: success/, out
