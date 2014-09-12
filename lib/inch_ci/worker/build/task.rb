@@ -1,5 +1,6 @@
 require 'tmpdir'
 require 'inch'
+require 'inch/cli'
 require 'repomen'
 
 require 'inch_ci/worker/build/result'
@@ -57,10 +58,10 @@ module InchCI
 
         def parse_codebase(path)
           YARD::Config.options[:safe_mode] = true
+
           begin
             language = :ruby # TODO: make dynamic
-            config = ::Inch::Config.for(language, path)
-            ::Inch::Codebase.parse(path, config.codebase)
+            ::Inch::Codebase.parse(path, to_config(language, path))
           rescue Exception => e
             warn e.inspect
             nil
@@ -75,6 +76,43 @@ module InchCI
         def retrieve_repo
           repo.retrieved? ? repo : nil
         end
+
+        # Creates a Config::Codebase object and returns it
+        # (merges relevant values of a given +options+ object before).
+        #
+        # @param options [Options::Base]
+        # @return [Config::Codebase]
+        def to_config(language, path)
+          config = ::Inch::Config.for(language, path).codebase
+
+          if language == :ruby
+            helper = YardOptsWrapper.new(path)
+            config.included_files = helper.paths unless helper.paths.empty?
+            unless helper.excluded.empty?
+              config.excluded_files = helper.excluded
+            end
+          end
+
+          config
+        end
+
+        # Utility class to extract .yardopts from repo dir
+        class YardOptsWrapper
+          YARD_DEFAULT_FILES = ["{lib,app}/**/*.rb", "ext/**/*.c"]
+
+          attr_reader :paths, :excluded
+
+          def initialize(path)
+            old_path = Dir.pwd
+            Dir.chdir path
+            wrapper = ::Inch::CLI::YardoptsHelper::YardoptsWrapper.new
+            wrapper.parse_arguments()
+            @paths = wrapper.files == YARD_DEFAULT_FILES ? [] : wrapper.files
+            @excluded = wrapper.excluded
+            Dir.chdir old_path
+          end
+        end
+
       end
     end
   end
