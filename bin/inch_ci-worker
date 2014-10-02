@@ -21,6 +21,12 @@ class Command
     end
   end
 
+  class BuildJSON
+    def initialize(filename)
+      InchCI::Worker::BuildJSON::Task.new(filename)
+    end
+  end
+
   class ListTags
     def initialize(url, branch_name)
       InchCI::Worker::ListTags::Task.new(url, branch_name)
@@ -35,6 +41,7 @@ class Command
 
   MAP = {
     'build' => Build,
+    'build-from-json' => BuildJSON,
     'list-tags' => ListTags,
     '-v' => Version,
   }

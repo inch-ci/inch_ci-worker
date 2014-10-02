@@ -12,4 +12,5 @@ module InchCI
 end
 
 require 'inch_ci/worker/build'
+require 'inch_ci/worker/build_json'
 require 'inch_ci/worker/list_tags'

@@ -1,4 +1,4 @@
-require_relative 'list_tags/task'
+require 'inch_ci/worker/list_tags/task'
 
 module InchCI
   module Worker

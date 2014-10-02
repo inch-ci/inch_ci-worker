@@ -1,7 +1,7 @@
 require 'inch'
 require 'repomen'
 
-require_relative 'report'
+require 'inch_ci/worker/list_tags/report'
 
 module InchCI
   module Worker

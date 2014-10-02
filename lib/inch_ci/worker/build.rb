@@ -1,4 +1,4 @@
-require_relative 'build/task'
+require 'inch_ci/worker/build/task'
 
 module InchCI
   module Worker
