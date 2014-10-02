@@ -9,7 +9,7 @@ module InchCI
         attr_reader :json
 
         def initialize(filename)
-          @json = JSON[File.read(filename)]
+          @json = BuildJSON.json(filename)
           @work_dir = Dir.mktmpdir
 
           started_at = Time.now
@@ -27,11 +27,11 @@ module InchCI
         end
 
         def build(filename)
-          language    = json['language']
-          branch_name = json['branch_name'] || json['travis_branch']
-          revision    = json['revision'] || json['travis_commit']
-          nwo         = json['nwo'] || json['travis_repo_slug']
-          @url        = json['git_repo_url']
+          language    = json.language
+          branch_name = json.branch_name
+          revision    = json.revision
+          nwo         = json.nwo
+          @url        = json.url
           latest_revision  = true # TODO: make truthful
 
           if retrieve_repo
