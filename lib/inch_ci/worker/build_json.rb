@@ -11,20 +11,20 @@ module InchCI
         attr_reader :language, :branch_name, :revision, :nwo, :url
 
         def initialize(filename)
-          json = JSON[File.read(filename)]
-          @language    = json['language']
-          @branch_name = json['branch_name'] || json['travis_branch']
-          @revision    = json['revision'] || json['travis_commit']
-          @nwo         = json['nwo'] || json['travis_repo_slug']
-          @url         = json['git_repo_url']
+          @json = JSON[File.read(filename)]
+          @language    = @json['language']
+          @branch_name = @json['branch_name'] || @json['travis_branch']
+          @revision    = @json['revision'] || @json['travis_commit']
+          @nwo         = @json['nwo'] || @json['travis_repo_slug']
+          @url         = @json['git_repo_url']
         end
 
         def travis?
-          !json['travis'].nil?
+          !@json['travis'].nil?
         end
 
         def to_h(include_objects: true)
-          h = json.dup
+          h = @json.dup
           h.delete('objects') unless include_objects
           h
         end
