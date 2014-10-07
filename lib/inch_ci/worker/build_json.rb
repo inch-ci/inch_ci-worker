@@ -11,7 +11,8 @@ module InchCI
         attr_reader :language, :branch_name, :revision, :nwo, :url
 
         def initialize(filename)
-          @json = JSON[File.read(filename)]
+          contents = File.read(filename, :encoding => 'utf-8')
+          @json = JSON[contents]
           @language    = @json['language']
           @branch_name = @json['branch_name'] || @json['travis_branch']
           @revision    = @json['revision'] || @json['travis_commit']
