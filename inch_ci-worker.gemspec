@@ -23,6 +23,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "simplecov"
   spec.add_development_dependency "pry"
 
-  spec.add_dependency "inch", "0.5.1"
+  spec.add_dependency "inch"
   spec.add_dependency "repomen", ">= 0.2.0.rc1"
 end
