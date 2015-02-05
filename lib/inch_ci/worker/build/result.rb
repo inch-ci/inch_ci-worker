@@ -39,6 +39,21 @@ module InchCI
         end
       end
 
+      class ResultDeffered < Result
+        def revision_uid; nil; end
+        def revision_message; nil; end
+        def revision_author_name; nil; end
+        def revision_author_email; nil; end
+        def revision_authored_at; nil; end
+        def tag_uid; nil; end
+        def service_name; nil; end
+        def user_name; nil; end
+        def repo_name; nil; end
+        def status
+          'deffered'
+        end
+      end
+
       class ResultFail < Result
         def revision_uid; nil; end
         def revision_message; nil; end

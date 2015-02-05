@@ -11,14 +11,14 @@ module InchCI
   module Worker
     module Build
       class Task
-        def initialize(url, branch_name = 'master', revision = nil)
+        def initialize(url, branch_name = 'master', revision = nil, language = nil)
           @work_dir = Dir.mktmpdir
           if revision.nil?
             revision = 'HEAD'
             @latest_revision = true
           end
           started_at = Time.now
-          @result = build(url, branch_name, revision, !!@latest_revision)
+          @result = build(url, branch_name, revision, !!@latest_revision, language)
           @result.finished_at = Time.now
           @result.started_at = started_at
           puts Report.new(@result).to_yaml
@@ -33,12 +33,12 @@ module InchCI
           BadgeDetector.in_readme?(repo, info)
         end
 
-        def build(url, branch_name, revision, latest_revision)
+        def build(url, branch_name, revision, latest_revision, language)
           @url = url
           if retrieve_repo
             if repo.change_branch(branch_name, true)
               if repo.checkout_revision(revision)
-                if @codebase = parse_codebase(repo.path)
+                if @codebase = parse_codebase(language, repo.path)
                   result = ResultSuccess.new(repo, branch_name, latest_revision, @codebase.objects)
                   result.badge_in_readme = badge_in_readme?(result)
                   result
@@ -56,16 +56,46 @@ module InchCI
           end
         end
 
-        def parse_codebase(path)
-          YARD::Config.options[:safe_mode] = true
+        def parse_codebase(language, path)
+          if language.to_s.downcase == 'javascript'
+            parse_javascript_codebase(path)
+          else
+            parse_ruby_codebase(path)
+          end
+        end
 
+        def parse_javascript_codebase(path)
+          dump_file = prepare_javascript_codebase(path)
+          return if dump_file.nil? # this causes ResultParserFailed
+
+          config = to_config(:javascript, path)
+          config.read_dump_file = dump_file
           begin
-            language = :ruby # TODO: make dynamic
-            ::Inch::Codebase.parse(path, to_config(language, path))
+            ::Inch::Codebase.parse(path, config)
           rescue Exception => e
             warn e.inspect
             nil
           end
+        end
+
+        def parse_ruby_codebase(path)
+          YARD::Config.options[:safe_mode] = true
+
+          begin
+            ::Inch::Codebase.parse(path, to_config(:ruby, path))
+          rescue Exception => e
+            warn e.inspect
+            nil
+          end
+        end
+
+        def prepare_javascript_codebase(path)
+          old_path = Dir.pwd
+          Dir.chdir path
+          `npm install inchjs && inchjs --dry-run`
+          Dir.chdir old_path
+          dump_file = File.join(path, 'docs.json')
+          File.exist?(dump_file) ? dump_file : nil
         end
 
         def repo

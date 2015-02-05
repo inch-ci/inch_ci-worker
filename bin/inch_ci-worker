@@ -16,8 +16,17 @@ require 'inch_ci/worker'
 
 class Command
   class Build
-    def initialize(url, branch_name = nil, revision = nil)
-      InchCI::Worker::Build::Task.new(url, branch_name, revision)
+    def initialize(url, branch_name = nil, *args)
+      revision, language = nil
+      args.each do |arg|
+        if arg =~ /^--language=(.+)$/
+          language = $1
+        else
+          revision = arg
+        end
+      end
+
+      InchCI::Worker::Build::Task.new(url, branch_name, revision, language)
     end
   end
 
