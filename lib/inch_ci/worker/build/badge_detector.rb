@@ -13,7 +13,7 @@ module InchCI
 
         # @return [String] filename
         def self.find_readme(repo)
-          Dir[File.join(repo.path, '*.*')].detect do |f|
+          Dir[File.join(repo.path, '*.*')].sort.detect do |f|
             File.basename(f) =~ /\Areadme\./i
           end
         end
