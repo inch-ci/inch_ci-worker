@@ -20,6 +20,10 @@ module InchCI
           @url         = @json['git_repo_url']
         end
 
+        def shell?
+          !@json['shell'].nil?
+        end
+
         def circleci?
           !@json['circleci'].nil?
         end
