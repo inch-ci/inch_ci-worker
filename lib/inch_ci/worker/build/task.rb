@@ -37,7 +37,7 @@ module InchCI
           @url = url
           if retrieve_repo
             checkout_cmd = branch_name == "master" ? "master" : "--track origin/#{branch_name}"
-            if repo.change_branch(checkout_cmd, true)
+            if repo.branch_name == branch_name || repo.change_branch(checkout_cmd, true)
               if repo.checkout_revision(revision)
                 if @codebase = parse_codebase(language, repo.path)
                   result = ResultSuccess.new(repo, branch_name, latest_revision, @codebase.objects)
